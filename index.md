@@ -1,6 +1,6 @@
 ---
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-08-26
 status: active
 ---
 
@@ -50,6 +50,7 @@ status: active
 - 🔬 [Что мешает выйти в безубыточность](hypotheses/что-мешает-безубыточности.md) — 12 гипотез о блокерах
 - 🔎 [Обзвон клиентов](initiatives.md) (дорожка 0, сейчас) — бесплатный диагноз, почему нет повторных
 - 🚀 [Инициативы](initiatives.md) (по приоритету): home page+новинки → бренды → реактивация повторных → ИИ SMM → (∥) checkout → упаковка
+- 📣 [Content Strategy](strategy/content-strategy.md) — Editorial Windows, personas и правила выбора следующего Instagram-поста
 
 ---
 
