@@ -1,6 +1,6 @@
 ---
 created: 2026-06-27
-updated: 2026-08-27
+updated: 2026-08-28
 status: active
 ---
 
@@ -50,7 +50,7 @@ status: active
 - 🔬 [Что мешает выйти в безубыточность](hypotheses/что-мешает-безубыточности.md) — 12 гипотез о блокерах
 - 🔎 [Обзвон клиентов](initiatives.md) (дорожка 0, сейчас) — бесплатный диагноз, почему нет повторных
 - 🚀 [Инициативы](initiatives.md) (по приоритету): home page+новинки → бренды → реактивация повторных → ИИ SMM → (∥) checkout → упаковка
-- 📣 [Content Strategy](strategy/content-strategy.md) — финальная схема: Brand Policy + visual preset → weighted Editorial Window → Content Pool → сначала manual selection, позже Dynamic Publication Router; плюс риски, attribution и MVP launch order
+- 📣 [Content Strategy](strategy/content-strategy.md) — persistent Brand/Story layer → live in-stock catalogue + Visual Passports → catalogue-supported directions → human-selected weighted Editorial Window → Stylist/VLM → Content Pool → сначала manual publication selection, позже Dynamic Publication Router
 
 ---
 

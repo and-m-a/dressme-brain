@@ -1,6 +1,6 @@
 ---
 created: 2026-08-26
-updated: 2026-08-27
+updated: 2026-08-28
 status: active
 tags: [strategy, content, instagram, editorial-window, content-factory, zametna]
 ---
@@ -51,19 +51,50 @@ Quiet Luxury → Sexy → Business → Romantic → Casual → Fashion Forward
 
 Не разделять аудиторию по длинным блокам и не смешивать контент случайно.
 
+Критически важно различать **story hierarchy** и **production order**.
+
+Story hierarchy описывает смысловую структуру бренда:
+
 ```text
-ONE BRAND UNIVERSE
+Brand Narrative / Brand Policy
         ↓
-Brand Narrative + Brand Policy + Visual Language
+Master Story
         ↓
-Editorial Window = temporary weighted context
+Season / Campaign (optional conceptual layer)
         ↓
-Content Pool of strong available candidates
-        ↓
-Dynamic / initially manual publication selection
-        ↓
+possible Editorial Windows / chapters
+```
+
+Но это **не означает**, что конкретный Editorial Window выбирается до анализа ассортимента.
+
+Операционная архитектура MVP:
+
+```text
+PERSISTENT BRAND LAYER
+Brand Narrative + Brand Policy + Master Story + Visual Language
+                         ↓ constrains
+CURRENT IN-STOCK CATALOGUE + Visual Passports
+                         ↓
+catalogue audit / supported editorial directions
+                         ↓
+human selects active Editorial Window
+                         ↓
+active Window + current stock
+                         ↓
+AI Stylist / VLM / Content Generation
+                         ↓
+Approved Content Pool
+                         ↓
+manual editorial/publication selection first
+                         ↓
 Instagram + attribution + analytics
 ```
+
+> **Главное правило:** Master Story задаёт постоянную ZAMETNA-вселенную и возможные главы, но **реальный текущий каталог решает, какую главу мы способны убедительно рассказать сейчас**. Конкретный active Editorial Window выбирается после live-аудита in-stock ассортимента и Visual Passports.
+
+Нельзя читать `Master Story → Editorial Window` как «сначала придумать Window, потом заставить каталог его заполнить».
+
+`Season / Campaign` может быть полезным человеческим storytelling-layer, но на MVP не обязан быть отдельной database entity или обязательной стадией pipeline.
 
 Ключевой вывод после нескольких раундов критики:
 
@@ -136,6 +167,8 @@ formalize lighting / framing / processing / environment rules
 zametna_editorial_v1
 ```
 
+Работа над visual preset может идти **параллельно** с catalogue audit. Preset не выбирает Editorial Window — он определяет photographic world, в котором потом будет показан выбранный supported Window.
+
 Позже возможны контролируемые seasonal micro-variations, чтобы избежать sterile preset fatigue, но не разные визуальные миры каждый день.
 
 ## 4. Editorial Window
@@ -156,7 +189,29 @@ Window задаёт:
 - visual preset;
 - product policy, например `require_stock`.
 
-### Первый Window: Back to Moscow / September
+### Как появляется active Window
+
+Window — **downstream decision от live catalogue audit**:
+
+```text
+CURRENT IN-STOCK CATALOGUE + VISUAL PASSPORTS
+        ↓
+фактическая карта ассортимента
+        ↓
+3–5 реально поддерживаемых editorial directions
+        ↓
+representative SKU + проверка реальных фото
+        ↓
+human editorial choice
+        ↓
+ACTIVE EDITORIAL WINDOW
+```
+
+Narrative может подсказать интересные главы, но нельзя активировать главу только потому, что она красиво звучит. Если ассортимент сейчас её слабо поддерживает, направление откладывается.
+
+### Example / candidate Window: Back to Moscow / September
+
+`Back to Moscow / September` — полезный **пример структуры и кандидат**, но не заранее утверждённый первый Window. Он должен пройти тот же live catalogue-first audit, что и любые другие направления.
 
 ```json
 {
@@ -209,25 +264,54 @@ Window задаёт:
 
 Поэтому Window меняет **центр тяжести**, но не запрещает соседние сценарии.
 
-Примеры:
+Примеры потенциальных chapters:
 
 - `Back to Moscow` → больше City Professional;
 - `Autumn Evenings` → больше Social / Occasion;
 - `Weekend in Moscow` → больше Premium Everyday;
 - fashion event / designer focus → больше Fashion Connoisseur.
 
-Это предположение нужно проверить по данным: посмотреть пересечение между товарными/style clusters не только по заказам, но и по product views, favourites, cart additions и orders. Если кластеры почти не пересекаются, возможно, под одной вывеской реально живут две разные аудитории и стратегию надо пересмотреть.
+Это именно **кандидаты на chapters**, а не обязательная ротация. Какой из них становится active Window, решает текущая поддержка каталогом + human editorial choice.
 
-## 6. AI Stylist + Visual Passports
+Рабочую гипотезу про одну broad premium audience нужно проверить по данным: посмотреть пересечение между товарными/style clusters не только по заказам, но и по product views, favourites, cart additions и orders. Если кластеры почти не пересекаются, возможно, под одной вывеской реально живут две разные аудитории и стратегию надо пересмотреть.
 
-Генерация должна быть hybrid и bottom-up от реального каталога:
+## 6. Catalogue-first audit → AI Stylist
+
+Здесь есть **две разные стадии**, и их нельзя смешивать.
+
+### 6.1. Сначала определяем supported editorial directions
+
+Для broad audit не нужно сразу смотреть фотографии всех 600+ SKU. Сначала используем полный live in-stock ассортимент, Visual Passports и catalogue metadata:
+
+```text
+ALL CURRENT IN-STOCK SKU
++
+VISUAL PASSPORTS / catalogue metadata
+        ↓
+slot / product type / style / occasion / season /
+colour / material / silhouette / formality distributions
+        ↓
+3–5 catalogue-supported editorial directions
+        ↓
+representative SKU per direction
+        ↓
+real product photos / VLM-human validation
+        ↓
+human selects active Editorial Window
+```
+
+Visual Passports делают большую часть дешёвого broad audit. Реальные product photos нужны для финальной проверки representative SKU / направления: они подтверждают, что cluster визуально существует, а не появился только из тегов.
+
+### 6.2. После выбора Window ищем сильные looks
+
+Только после этого active Window становится контекстом для AI Stylist:
 
 ```text
 CURRENT STOCK
 +
 VISUAL PASSPORTS
 +
-EDITORIAL WINDOW
+ACTIVE EDITORIAL WINDOW
         ↓
 cheap retrieval / scoring
         ↓
@@ -241,6 +325,8 @@ strong approved outfits
 Visual Passport — structured retrieval signal. Actual images — visual truth.
 
 Шкалы вроде `sensuality 2 vs 3` нельзя считать объективным измерением. Их полезнее использовать как **soft ordinal signals**: важно, чтобы система обычно понимала relative order `more restrained → more sensual`, а не притворялась, что разница между 2 и 3 физически точна.
+
+Слабый outfit ради Window не принимаем. Сильный off-window candidate можно сохранить в Bench / Content Pool для будущей главы, а не натягивать его на текущий контекст.
 
 Подробнее — [ИИ-стилист](ии-стилист.md).
 
@@ -401,6 +487,11 @@ out of stock → replace / regenerate / remove candidate
 
 ## 16. Ключевые риски и что с ними делаем
 
+### Top-down Window inversion
+**Риск:** прочитать storytelling chain как `Master Story → выбрать Window → заставить каталог заполнить его`.
+
+**Решение:** persistent brand/story layer задаёт рамку; live in-stock catalogue + Visual Passports сначала определяют supported directions; active Window выбирается человеком только после этого.
+
 ### Grid fallacy / chronological drama
 **Риск:** строить `core → adjacent → experiment → transition` как будто пользователь читает Instagram подряд.
 
@@ -463,15 +554,16 @@ out of stock → replace / regenerate / remove candidate
 
 ## 17. MVP launch order
 
-1. На основе уже сгенерированных образов + 10–15 тестовых кадров собрать 15–20 visual candidates.
-2. Глазами выбрать coherent reference set и зафиксировать `zametna_editorial_v1`.
-3. Создать первый Window **Back to Moscow / September** как weighted context, не расписание.
-4. Собрать initial approved pool **10–20 publishable assets**.
-5. Первые ~30 публикаций выбирать вручную; логировать metadata, причины выбора, alternatives и results.
-6. Параллельно оформить Bio / Highlights / pinned, attribution и stock pre-publish check.
-7. На 30–50 публикациях разобрать реальные operational bottlenecks: acceptance rate, pool depletion, repetition, stock failures, visual consistency.
-8. На 50–100+ публикациях искать content patterns и только тогда усложнять publication router.
-9. Следующий Editorial Window на MVP выбирается человеком. Automatic planner / rotation — позже.
+1. Параллельно с catalogue work: на основе уже сгенерированных образов + 10–15 тестовых кадров собрать 15–20 visual candidates, глазами выбрать coherent reference set и зафиксировать `zametna_editorial_v1`.
+2. Провести **live audit полного current in-stock каталога + Visual Passports** и собрать фактическую карту ассортимента.
+3. Из неё вывести 3–5 editorial directions, которые каталог действительно хорошо поддерживает; для каждого выбрать representative SKU и проверить реальные фото.
+4. Человек выбирает первый active Editorial Window из реально поддерживаемых направлений. `Back to Moscow / September` остаётся кандидатом до этого шага.
+5. Передать active Window как weighted context в retrieval / AI Stylist / VLM и собрать initial approved pool **10–20 publishable assets**.
+6. Первые ~30 публикаций выбирать вручную; логировать metadata, причины выбора, alternatives и results.
+7. Параллельно оформить Bio / Highlights / pinned, attribution и stock pre-publish check.
+8. На 30–50 публикациях разобрать реальные operational bottlenecks: acceptance rate, pool depletion, repetition, stock failures, visual consistency.
+9. На 50–100+ публикациях искать content patterns и только тогда усложнять publication router.
+10. Следующие Editorial Windows на MVP тоже выбираются человеком из catalogue-supported directions. Automatic planner / rotation — позже.
 
 ## 18. Что эта архитектура НЕ доказывает
 
