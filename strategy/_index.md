@@ -1,6 +1,6 @@
 ---
 created: 2026-06-27
-updated: 2026-08-28
+updated: 2026-08-29
 status: active
 ---
 
@@ -18,5 +18,6 @@ status: active
 - [Архетипы](archetypes.md) — Lover как основной характер, Ruler как supporting и ситуационные акценты Outlaw/Rebel, Hero и Creator.
 - [Storytelling](storytelling.md) — semantic-схема мира бренда: одна женщина ZAMETNA, Master Story и возможные chapters; отдельно зафиксировано, что narrative hierarchy не равна production order и active Window выбирается только после catalogue audit.
 - [Content Strategy](content-strategy.md) — финальная content architecture: persistent Brand/Story layer → live in-stock catalogue + Visual Passports → catalogue-supported directions → human-selected weighted Editorial Window → Stylist/VLM → Content Pool → manual selection / будущий router.
+- [Reference analysis — Instagram](reference_analysis.md) — визуальные референсы ленты: editorial coherence + живой fashion-blogger layer, допустимый диапазон quiet luxury / feminine / sensual и location grammar для September Soft Power.
 - [ИИ-контент-завод](ии-контент-завод.md) — как превращаем товары и решения стилиста в повторяемые editorial formats и публикуемый контент.
 - [ИИ-стилист](ии-стилист.md) — отдельный механизм поиска, сравнения и накопления знаний о сильных сочетаниях товаров.
